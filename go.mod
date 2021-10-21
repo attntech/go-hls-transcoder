@@ -1,3 +1,3 @@
-module github.com/rendyfebry/go-hls-transcoder
+module github.com/attntech/go-hls-transcoder
 
-go 1.14
+go 1.16
