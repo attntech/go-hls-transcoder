@@ -13,7 +13,7 @@ func TestCmdExecuteFfmpeg(t *testing.T) {
 	srcPath := path.Join(base, "static", "sample.mov")
 	ffmpegPath := "/usr/local/bin/ffmpeg"
 
-	err := GenerateHLS(ffmpegPath, srcPath, targetPath, "480p")
+	err := GenerateHLS(ffmpegPath, srcPath, targetPath, "480p", false)
 	if err != nil {
 		panic(err)
 	}
