@@ -17,7 +17,7 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 		"-i", srcPath,
 		"-vf", "scale=trunc(oh*a/2)*2:1080",
 		"-map", "0:0",
-		"-map_metadata", "-1",
+		"-map_metadata", "-1", // to ignore metadata
 		"-c:a", "aac",
 		"-ar", "48000",
 		"-c:v", "h264",
