@@ -1,6 +1,9 @@
 package hls
 
-import "path/filepath"
+import (
+	"path/filepath"
+	"strings"
+)
 
 func getOptions(srcPath, targetPath, res string) ([]string, error) {
 	config, err := getConfig(res)
@@ -16,10 +19,8 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 		"-y",
 		"-i", srcPath,
 		"-vf", "scale=trunc(oh*a/2)*2:1080",
-		"-map", "0:0",
-		"-map", "0:2?",
-		"-map", "0:3?",
-		"-map", "0:4?",
+		"-map", "0:0", // select audio
+		"-map_metadata", "-1", // to ignore metadata
 		"-c:a", "aac",
 		"-ar", "48000",
 		"-c:v", "h264",
@@ -37,6 +38,33 @@ func getOptions(srcPath, targetPath, res string) ([]string, error) {
 		"-preset", "ultrafast",
 		"-hls_segment_filename", filenameTS,
 		filenameM3U8,
+	}
+
+	mp3Ext := ".mp3"
+	if !strings.EqualFold(srcPath[len(srcPath)-len(mp3Ext):], mp3Ext) {
+		options = []string{
+			"-hide_banner",
+			"-y",
+			"-i", srcPath,
+			"-vf", "scale=trunc(oh*a/2)*2:1080",
+			"-c:a", "aac",
+			"-ar", "48000",
+			"-c:v", "h264",
+			"-profile:v", "main",
+			"-crf", "20",
+			"-sc_threshold", "0",
+			"-g", "48",
+			"-keyint_min", "48",
+			"-hls_time", "10",
+			"-hls_playlist_type", "vod",
+			"-b:v", config.VideoBitrate,
+			"-maxrate", config.Maxrate,
+			"-bufsize", config.BufSize,
+			"-b:a", config.AudioBitrate,
+			"-preset", "ultrafast",
+			"-hls_segment_filename", filenameTS,
+			filenameM3U8,
+		}
 	}
 
 	return options, nil
